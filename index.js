@@ -10,7 +10,7 @@ app.use(cors());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.w6mhf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
@@ -41,7 +41,8 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const teacherDatabase = client.db('TechProDB').collection('Teachers')
+    const teacherDatabase = client.db('TechProDB').collection('Teachers');
+    const bookingDatabase =client.db('TechProDB').collection('Bookings')
 
 
 
@@ -53,6 +54,19 @@ async function run() {
     app.get('/becomeTeacher',async(req,res)=>{
       const cursor = teacherDatabase.find();
       const result = await cursor.toArray();
+      res.send(result)
+    })
+
+    app.get('/becomeTeacher/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query ={_id: new ObjectId(id)};
+      const result = await teacherDatabase.findOne(query)
+      res.send(result)
+    })
+
+    app.post('/bookings',async(req,res)=>{
+      const bookings = req.body;
+      const result =await bookingDatabase.insertOne(bookings)
       res.send(result)
     })
 
