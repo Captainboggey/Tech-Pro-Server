@@ -50,6 +50,11 @@ async function run() {
       const result =await teacherDatabase.insertOne(data);
       res.send(result) 
     })
+    app.get('/becomeTeacher',async(req,res)=>{
+      const cursor = teacherDatabase.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
 
 
 
