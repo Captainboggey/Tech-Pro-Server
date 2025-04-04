@@ -51,11 +51,26 @@ async function run() {
       const result =await teacherDatabase.insertOne(data);
       res.send(result) 
     })
+    // app.get('/becomeTeacher',async(req,res)=>{
+     
+    //   const cursor = teacherDatabase.find();
+    //   const result = await cursor.toArray();
+    //   res.send(result)
+      
+    // })
     app.get('/becomeTeacher',async(req,res)=>{
-      const cursor = teacherDatabase.find();
+      let query ={};
+      if(req.query?.language){
+        query ={language: req.query.language}
+
+      }
+      const cursor = teacherDatabase.find(query);
       const result = await cursor.toArray();
       res.send(result)
+      console.log(query.language)
     })
+
+
 
     app.get('/becomeTeacher/:id',async(req,res)=>{
       const id = req.params.id;
