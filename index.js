@@ -64,12 +64,16 @@ async function run() {
         query ={language: req.query.language}
 
       }
+      if(req.query?.email){
+        query ={email: req.query.email}
+
+      }
       const cursor = teacherDatabase.find(query);
       const result = await cursor.toArray();
       res.send(result)
-      console.log(query.language)
+      
     })
-
+    
 
 
     app.get('/becomeTeacher/:id',async(req,res)=>{
@@ -79,11 +83,47 @@ async function run() {
       res.send(result)
     })
 
+    app.put('/becomeTeacher/:id',async(req,res)=>{
+      const id = req.params.id;
+      const user =req.body;
+      const filter ={_id: new ObjectId(id)}
+      const options ={upsert:true}
+      const updateDoc={
+        $set:{
+          name : user.name,
+          tagOne: user.tagOne,
+          tagTwo: user.tagTwo,
+          flag: user.flag,
+          star: user.star,
+          review: user.review,
+          lessons: user.lessons,
+          amount: user.amount,
+          duration: user.duration,
+          language: user.language,
+          pp: user.pp,
+          description: user.description
+
+
+        }
+      }
+      const result = await teacherDatabase.updateOne(filter,updateDoc,options)
+      res.send(result)
+    })
+
+    app.delete('/becomeTeacher/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await teacherDatabase.deleteOne(query)
+      res.send(result)
+    })
+
     app.post('/bookings',async(req,res)=>{
       const bookings = req.body;
       const result =await bookingDatabase.insertOne(bookings)
       res.send(result)
     })
+
+   
 
 
 
